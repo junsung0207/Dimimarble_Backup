@@ -1,136 +1,136 @@
 #include "dimimarble.h"
 
 /*
-	ºí·ç¸¶ºíÀ» ¸ðÆ¼ºê·Î ÇÏ¿© º¸µå°ÔÀÓÀ» ±â¹ÝÀ¸·Î ÁøÇàµÇ´Â °ÔÀÓ.
-	º¸µåÆÇ ¸ð¾çÀº ºí·ç¸¶ºíÀÌÁö¸¸, ÀÏ¹ÝÀûÀÎ ºí·ç¸¶ºí°ú´Â ´Ù¸¥
-	¿ì¸®¸¸ÀÇ °ÔÀÓÀ» ¸¸µé±â À§ÇØ µð¹Ì°í¸¦ ¹è°æÀ¸·Î °ÔÀÓÀ» °³¹ß.
+	ë¸”ë£¨ë§ˆë¸”ì„ ëª¨í‹°ë¸Œë¡œ í•˜ì—¬ ë³´ë“œê²Œìž„ì„ ê¸°ë°˜ìœ¼ë¡œ ì§„í–‰ë˜ëŠ” ê²Œìž„.
+	ë³´ë“œíŒ ëª¨ì–‘ì€ ë¸”ë£¨ë§ˆë¸”ì´ì§€ë§Œ, ì¼ë°˜ì ì¸ ë¸”ë£¨ë§ˆë¸”ê³¼ëŠ” ë‹¤ë¥¸
+	ìš°ë¦¬ë§Œì˜ ê²Œìž„ì„ ë§Œë“¤ê¸° ìœ„í•´ ë””ë¯¸ê³ ë¥¼ ë°°ê²½ìœ¼ë¡œ ê²Œìž„ì„ ê°œë°œ.
 
-	ÀÌ±â´Â Á¶°Ç : ´ëÇÐ¿¡ ÁøÇÐÇÏ°Å³ª, »ó´ë¹æÀÌ ´ëÇÐ ÁøÇÐ¿¡ ½ÇÆÐÇÒ °æ¿ì ½Â¸®
+	ì´ê¸°ëŠ” ì¡°ê±´ : ëŒ€í•™ì— ì§„í•™í•˜ê±°ë‚˜, ìƒëŒ€ë°©ì´ ëŒ€í•™ ì§„í•™ì— ì‹¤íŒ¨í•  ê²½ìš° ìŠ¹ë¦¬
 
-	´ëÇÐ ÁøÇÐÀ» ÇÏ·Á¸é?
-	 - ÇØ´ç ÇÃ·¹ÀÌ¾î°¡ °í3 ÀÌ»óÀÌ µÇ¾î¾ßÇÔ.
-	 - Ä£¹Ðµµ°¡ 50ÀÌ»óÀÎ ¶¥ÀÌ 1°³ ÀÌ»óÀÌ¾î¾ß ÇÔ.
+	ëŒ€í•™ ì§„í•™ì„ í•˜ë ¤ë©´?
+	 - í•´ë‹¹ í”Œë ˆì´ì–´ê°€ ê³ 3 ì´ìƒì´ ë˜ì–´ì•¼í•¨.
+	 - ì¹œë°€ë„ê°€ 50ì´ìƒì¸ ë•…ì´ 1ê°œ ì´ìƒì´ì–´ì•¼ í•¨.
 
-	Á¦ÀÛÀÚ : À±ÁØ¼º, ±è±Ôºó
+	ì œìž‘ìž : ìœ¤ì¤€ì„±, ê¹€ê·œë¹ˆ
 */
 
 
 
-int PresentDice_Num;// ÇöÀç ±¼¸° ÁÖ»çÀ§ ¼ö
-int Present_P1_MapPoint = 0; // ÇÃ·¹ÀÌ¾î 1ÀÇ ÇöÀç ¸Ê À§Ä¡
-int Present_P2_MapPoint = 0; // ÇÃ·¹ÀÌ¾î 2ÀÇ ÇöÀç ¸Ê À§Ä¡
-int Go; //Áö±Ý ÅÏÀÇ Áö±Ý ÇÃ·¹ÀÌ¾î°¡ ¼±ÅÃÇÑ ¼±ÅÃÁö
-int C3_event = 0; //Çã°ü¹« ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int C1_event = 0; //·ù¸íÈñ ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int C6_event = 0;//±è»ó¿í ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int C12_event = 0; //ÃÖÇÏÀº ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int C13_event = 0; // ³²½Â¿Ï ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int C14_event = 0; // ±èÀç¿µ ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-int Game_over = 0; // 0Àº °ÔÀÓ ÁøÇà, 1Àº ÅðÇÐ, 2´Â º´¿ªÀÇ ÀÇ¹« ,3Àº ´ëÇÐ ÁøÇÐ ½ÇÆÐ 4´Â ´ëÇÐ ÁøÇÐ ¼º°ø
+int PresentDice_Num;// í˜„ìž¬ êµ´ë¦° ì£¼ì‚¬ìœ„ ìˆ˜
+int Present_P1_MapPoint = 0; // í”Œë ˆì´ì–´ 1ì˜ í˜„ìž¬ ë§µ ìœ„ì¹˜
+int Present_P2_MapPoint = 0; // í”Œë ˆì´ì–´ 2ì˜ í˜„ìž¬ ë§µ ìœ„ì¹˜
+int Go; //ì§€ê¸ˆ í„´ì˜ ì§€ê¸ˆ í”Œë ˆì´ì–´ê°€ ì„ íƒí•œ ì„ íƒì§€
+int C3_event = 0; //í—ˆê´€ë¬´ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int C1_event = 0; //ë¥˜ëª…í¬ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int C6_event = 0;//ê¹€ìƒìš± ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int C12_event = 0; //ìµœí•˜ì€ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int C13_event = 0; // ë‚¨ìŠ¹ì™„ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int C14_event = 0; // ê¹€ìž¬ì˜ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+int Game_over = 0; // 0ì€ ê²Œìž„ ì§„í–‰, 1ì€ í‡´í•™, 2ëŠ” ë³‘ì—­ì˜ ì˜ë¬´ ,3ì€ ëŒ€í•™ ì§„í•™ ì‹¤íŒ¨ 4ëŠ” ëŒ€í•™ ì§„í•™ ì„±ê³µ
 
-int P1_Life = 0; //Player 1ÀÇ ¶óÀÌÇÁ Æ÷ÀÎÆ® ÀÔ´Ï´Ù. 0 =°í1, 1 =°í2, 2= °í3, 3 = Àç¼ö 1³â, 4 = Àç¼ö 2³â
-int P2_Life = 0; //Player 2ÀÇ ¶óÀÌÇÁ Æ÷ÀÎÆ® ÀÔ´Ï´Ù. 0 =°í1, 1 =°í2, 2= °í3, 3 = Àç¼ö 1³â, 4 = Àç¼ö 2³â
+int P1_Life = 0; //Player 1ì˜ ë¼ì´í”„ í¬ì¸íŠ¸ ìž…ë‹ˆë‹¤. 0 =ê³ 1, 1 =ê³ 2, 2= ê³ 3, 3 = ìž¬ìˆ˜ 1ë…„, 4 = ìž¬ìˆ˜ 2ë…„
+int P2_Life = 0; //Player 2ì˜ ë¼ì´í”„ í¬ì¸íŠ¸ ìž…ë‹ˆë‹¤. 0 =ê³ 1, 1 =ê³ 2, 2= ê³ 3, 3 = ìž¬ìˆ˜ 1ë…„, 4 = ìž¬ìˆ˜ 2ë…„
 
-int MapPoint[20][2] = {													 //MapÀÇ ÇØ´ç Æ÷ÀÎÆ® ÁÂÇ¥°ª ¸ñ·Ï
-	{5,4} , {21,4} , {37 , 4} , {53 , 4} , {69 , 4} , {85 , 4}, {101, 4}, // À­ÁÙ
-																	{101,10},  // ¿À¸¥ÂÊ »çÀÌµå ÁÙ ½ÃÀÛ+1
+int MapPoint[20][2] = {													 //Mapì˜ í•´ë‹¹ í¬ì¸íŠ¸ ì¢Œí‘œê°’ ëª©ë¡
+	{5,4} , {21,4} , {37 , 4} , {53 , 4} , {69 , 4} , {85 , 4}, {101, 4}, // ìœ—ì¤„
+																	{101,10},  // ì˜¤ë¥¸ìª½ ì‚¬ì´ë“œ ì¤„ ì‹œìž‘+1
 																	{101,16},
 																	{101,22},
 																	{101,28},
-														{85,28}, // ¸Ç ¾Æ·¡ ¿À¸¥ÂÊ
+														{85,28}, // ë§¨ ì•„ëž˜ ì˜¤ë¥¸ìª½
 											 {69, 28},
 								  {53,28},
 					  {37,28},
 			 {21,28},
-	{5,28}, // ¿ÞÂÊ »çÀÌµå ÁÙ ½ÃÀÛ+1
+	{5,28}, // ì™¼ìª½ ì‚¬ì´ë“œ ì¤„ ì‹œìž‘+1
 	{5,22},
 	{5,16},
 	{5,10},
 };
 
-int closeness[20] = { 0,100,100,100,100, 100,100,100,100,100, 0,100,100,100,100, 100,100,100,100,100 }; //Ä£¹Ðµµ ¼öÄ¡ ¹è¿­
+int closeness[20] = { 0,100,100,100,100, 100,100,100,100,100, 0,100,100,100,100, 100,100,100,100,100 }; //ì¹œë°€ë„ ìˆ˜ì¹˜ ë°°ì—´
 
-char T_name[20][100] = { {""}, {"·ù¸íÈñ ¼±»ý´Ô"}, {"ÇÔÁö¿¬ ¼±»ý´Ô"},{"Çã°ü¹« ¼±»ý´Ô"},{"Á¦Á¦ ¼±»ý´Ô"},
-								{"¹Ú°æ¼ö ¼±»ý´Ô"},{"±è»ó¿í ¼±»ý´Ô"},{"¹èÁ¾¿ì ¼±»ý´Ô"},{"ÀüÈñÁø ¼±»ý´Ô"},{"¾çÈñÁ¤ ¼±»ý´Ô"},
-								{""},{"ÀÌÅÃÁÖ ¼±»ý´Ô"},	{"ÃÖÇÏÀº ¼±»ý´Ô"},{"³²½Â¿Ï ¼±»ý´Ô"},{"±èÀç¿µ ¼±»ý´Ô"},
-								{"ÀüÀ¯¿ø ¼±»ý´Ô"},{"ÀÌÀç¹Î ¼±»ý´Ô"}, {"ÇÏ¼ººÀ ¼±»ý´Ô"}, {"Á¤µ¿À± ¼±»ý´Ô"}, {"Á¤Èñ¹ü ¼±»ý´Ô"} 
-}; //¼±»ý´Ô ÀÌ¸§ ¹è¿­
+char T_name[20][100] = { {""}, {"ë¥˜ëª…í¬ ì„ ìƒë‹˜"}, {"í•¨ì§€ì—° ì„ ìƒë‹˜"},{"í—ˆê´€ë¬´ ì„ ìƒë‹˜"},{"ì œì œ ì„ ìƒë‹˜"},
+								{"ë°•ê²½ìˆ˜ ì„ ìƒë‹˜"},{"ê¹€ìƒìš± ì„ ìƒë‹˜"},{"ë°°ì¢…ìš° ì„ ìƒë‹˜"},{"ì „í¬ì§„ ì„ ìƒë‹˜"},{"ì–‘í¬ì • ì„ ìƒë‹˜"},
+								{""},{"ì´íƒì£¼ ì„ ìƒë‹˜"},	{"ìµœí•˜ì€ ì„ ìƒë‹˜"},{"ë‚¨ìŠ¹ì™„ ì„ ìƒë‹˜"},{"ê¹€ìž¬ì˜ ì„ ìƒë‹˜"},
+								{"ì „ìœ ì› ì„ ìƒë‹˜"},{"ì´ìž¬ë¯¼ ì„ ìƒë‹˜"}, {"í•˜ì„±ë´‰ ì„ ìƒë‹˜"}, {"ì •ë™ìœ¤ ì„ ìƒë‹˜"}, {"ì •í¬ë²” ì„ ìƒë‹˜"} 
+}; //ì„ ìƒë‹˜ ì´ë¦„ ë°°ì—´
 
 
 int main()
 {		
 
-		player[0].horse_img = "¡Ú";				//1¹ø¸»
-		player[1].horse_img = "¢¼";				//2¹ø¸»
-		player[0].color = 12;					//»¡°£¸»
-		player[1].color = 9;					//ÆÄ¶õ¸»
+		player[0].horse_img = "â˜…";				//1ë²ˆë§
+		player[1].horse_img = "â™ ";				//2ë²ˆë§
+		player[0].color = 12;					//ë¹¨ê°„ë§
+		player[1].color = 9;					//íŒŒëž€ë§
 		
 		int n_n;
 		int Game_turn = 0;
-		// -- ÀÎÆ®·Î ºÎºÐ -- //
+		// -- ì¸íŠ¸ë¡œ ë¶€ë¶„ -- //
 		while (1) { 
 			
 			PlaySound(TEXT("Game_intro.wav"), 0, SND_FILENAME | SND_ASYNC);
-			system("title µð¹Ì¸¶ºí"); // Á¦¸ñ Ãâ·Â
-			system("color F0"); // ¹è°æ ÄÃ·¯ ÁöÁ¤
+			system("title ë””ë¯¸ë§ˆë¸”"); // ì œëª© ì¶œë ¥
+			system("color F0"); // ë°°ê²½ ì»¬ëŸ¬ ì§€ì •
 			srand((unsigned int)time(NULL));
 
-			clearCursor(0); // Ä¿¼­¸¦ Áö¿öÁÝ´Ï´Ù.
+			clearCursor(0); // ì»¤ì„œë¥¼ ì§€ì›Œì¤ë‹ˆë‹¤.
 			system("cls");
-			MenuIntro();			//¸Þ´ºÀÎÆ®·Î½ÇÇà
+			MenuIntro();			//ë©”ë‰´ì¸íŠ¸ë¡œì‹¤í–‰
 			system("cls");
 			
-			//--¿©±â±îÁö ÀÎÆ®·ÎºÎ¹®--//
+			//--ì—¬ê¸°ê¹Œì§€ ì¸íŠ¸ë¡œë¶€ë¬¸--//
 			clearCursor(0);
-			int d; //dice °ÔÀÌÁö °ü·Ã º¯¼ö
+			int d; //dice ê²Œì´ì§€ ê´€ë ¨ ë³€ìˆ˜
 			int c, j = 2, updown_switch = 1;
-			int turnplayer = 1; // ÇöÀç ÅÏÀÇ ÇÃ·¹ÀÌ¾î °ªÀº 1 ¾Æ´Ï¸é 2
+			int turnplayer = 1; // í˜„ìž¬ í„´ì˜ í”Œë ˆì´ì–´ ê°’ì€ 1 ì•„ë‹ˆë©´ 2
 
-			Set_Game_Console_Size(); // ÄÜ¼Ö »çÀÌÁî ÁöÁ¤
+			Set_Game_Console_Size(); // ì½˜ì†” ì‚¬ì´ì¦ˆ ì§€ì •
 			
-			Game_board_print(); //°ÔÀÓ º¸µå ÆÇ Ãâ·Â ÇÔ¼ö
-			Game_board_contents_print(); //º¸µå ÆÇ À§ÀÇ ÄÁÅÙÃ÷ Ãâ·Â ÇÔ¼ö
-			Game_board_printClosePoint(); //º¸µå ÆÇ À§ÀÇ Ä£¹Ðµµ ¹®±¸ Ãâ·Â ÇÔ¼ö
-			print_before_Start(); //ÅÏ ½ÃÀÛ Àü, ÁÖ»çÀ§ ±×·¡ÇÈ Ãâ·Â
-			Print_Life(); //¶óÀÌÇÁ Æ÷ÀÎÆ® Ãâ·Â ÇÔ¼ö
-			printbar(); //ÁÖ»çÀ§ °ÔÀÌÁö¿Í º¸µå ¿ÜÀÇ ´Ù¸¥ ±×·¡ÇÈ Ãâ·Â
-			state_print(); //ÇÃ·¹ÀÌ¾îµéÀÇ »óÅÂ Ãâ·Â
-			closeness_recall(); //ÃÊ±â 0À¸·Î µÇ¾îÀÖ´Â ¸ðµç Ä£¹Ðµµ °ª Ãâ·Â
-			PlaySound(NULL, 0, 0); //°ÔÀÓ ½ÃÀÛ°ú µ¿½Ã¿¡ ÀÎÆ®·Î ³ë·¡ ¸ØÃã.
+			Game_board_print(); //ê²Œìž„ ë³´ë“œ íŒ ì¶œë ¥ í•¨ìˆ˜
+			Game_board_contents_print(); //ë³´ë“œ íŒ ìœ„ì˜ ì»¨í…ì¸  ì¶œë ¥ í•¨ìˆ˜
+			Game_board_printClosePoint(); //ë³´ë“œ íŒ ìœ„ì˜ ì¹œë°€ë„ ë¬¸êµ¬ ì¶œë ¥ í•¨ìˆ˜
+			print_before_Start(); //í„´ ì‹œìž‘ ì „, ì£¼ì‚¬ìœ„ ê·¸ëž˜í”½ ì¶œë ¥
+			Print_Life(); //ë¼ì´í”„ í¬ì¸íŠ¸ ì¶œë ¥ í•¨ìˆ˜
+			printbar(); //ì£¼ì‚¬ìœ„ ê²Œì´ì§€ì™€ ë³´ë“œ ì™¸ì˜ ë‹¤ë¥¸ ê·¸ëž˜í”½ ì¶œë ¥
+			state_print(); //í”Œë ˆì´ì–´ë“¤ì˜ ìƒíƒœ ì¶œë ¥
+			closeness_recall(); //ì´ˆê¸° 0ìœ¼ë¡œ ë˜ì–´ìžˆëŠ” ëª¨ë“  ì¹œë°€ë„ ê°’ ì¶œë ¥
+			PlaySound(NULL, 0, 0); //ê²Œìž„ ì‹œìž‘ê³¼ ë™ì‹œì— ì¸íŠ¸ë¡œ ë…¸ëž˜ ë©ˆì¶¤.
 			/*Sleep(300);
 			paint(hWnd, dpi, bitmap);
 			Sleep(10000000);*/
 			
-			while (1) //ÅÏ µ¹¸®´Â while ¹®
+			while (1) //í„´ ëŒë¦¬ëŠ” while ë¬¸
 			{
 
-				closeness_recall(); //Ä£¹Ðµµ °ª °Ô¼ÓÇØ¼­ °»½Å
+				closeness_recall(); //ì¹œë°€ë„ ê°’ ê²Œì†í•´ì„œ ê°±ì‹ 
 				setcolor(32, 31); 
 				Assistant_Text_clear();
 				Board_Middle_clear();
-				Game_turn++; //°ÔÀÓ ÅÏ º¯¼ö(°³¹ß¿ë)
+				Game_turn++; //ê²Œìž„ í„´ ë³€ìˆ˜(ê°œë°œìš©)
 				gotoxy(5, 38); 
 
-				n_n = 1; //Å°º¸µå °ÔÀÌÁö °ü·Ã º¯¼ö(ÀÌ º¯¼ö¸¦ ÅëÇØ Å°º¸µå °ÔÀÌÁö°¡ À§¾Æ·¡·Î ¿òÁ÷ÀÏ ¼ö ÀÖÀ½.
-				Go = print_Assistant_Turn_Start(turnplayer - 1); // ÇØ´ç ÅÏ¿¡ ¹«¾ùÀ» ÇÒ°ÇÁö ¹¯´Â´Ù.
-				Print_Life(); //ÇÃ·¹ÀÌ¾îµéÀÇ ³ªÀÌ Ãâ·Â(ex>±è±Ôºó- °í1)
-				Board_Middle_clear(); //º¸µåÀÇ °¡¿îµ¥ ºÎºÐÀ» ºñ¿öÁÜ.
-				Dice_0_print(); //´ÙÀÌ½º 0ÀÏ¶§ÀÇ ±×·¡ÇÈ Ãâ·Â
-				if (Go == 0) { //´ëÇÐ ÁøÇÐ ¼º°øÇßÀ»‹š,
-					Game_over = 4; break; //°ÔÀÓÀÌ ³¡³³´Ï´Ù.
+				n_n = 1; //í‚¤ë³´ë“œ ê²Œì´ì§€ ê´€ë ¨ ë³€ìˆ˜(ì´ ë³€ìˆ˜ë¥¼ í†µí•´ í‚¤ë³´ë“œ ê²Œì´ì§€ê°€ ìœ„ì•„ëž˜ë¡œ ì›€ì§ì¼ ìˆ˜ ìžˆìŒ.
+				Go = print_Assistant_Turn_Start(turnplayer - 1); // í•´ë‹¹ í„´ì— ë¬´ì—‡ì„ í• ê±´ì§€ ë¬»ëŠ”ë‹¤.
+				Print_Life(); //í”Œë ˆì´ì–´ë“¤ì˜ ë‚˜ì´ ì¶œë ¥(ex>ê¹€ê·œë¹ˆ- ê³ 1)
+				Board_Middle_clear(); //ë³´ë“œì˜ ê°€ìš´ë° ë¶€ë¶„ì„ ë¹„ì›Œì¤Œ.
+				Dice_0_print(); //ë‹¤ì´ìŠ¤ 0ì¼ë•Œì˜ ê·¸ëž˜í”½ ì¶œë ¥
+				if (Go == 0) { //ëŒ€í•™ ì§„í•™ ì„±ê³µí–ˆì„Â‹Âš,
+					Game_over = 4; break; //ê²Œìž„ì´ ëë‚©ë‹ˆë‹¤.
 				}
-				if (Go == 1) { //Å°º¸µå °ÔÀÌÁö¸¦ µ¹¸³´Ï´Ù.
-					while (n_n) //Å°º¸µå °ÔÀÌÁö µ¹¸®´Â ÇÔ¼ö Ãâ·ÂÇÏ´Â while ¹® (while¹®ÀÇ kbhit()ÇÔ¼ö°¡ ½ºÆäÀÌ½º¹Ù ÀÔ·Â ¿©ºÎ ÆÇ´Ü
+				if (Go == 1) { //í‚¤ë³´ë“œ ê²Œì´ì§€ë¥¼ ëŒë¦½ë‹ˆë‹¤.
+					while (n_n) //í‚¤ë³´ë“œ ê²Œì´ì§€ ëŒë¦¬ëŠ” í•¨ìˆ˜ ì¶œë ¥í•˜ëŠ” while ë¬¸ (whileë¬¸ì˜ kbhit()í•¨ìˆ˜ê°€ ìŠ¤íŽ˜ì´ìŠ¤ë°” ìž…ë ¥ ì—¬ë¶€ íŒë‹¨
 					{
-						Dice_space_helper(1); //'½ºÆäÀÌ½º¹Ù¸¦ ´©¸£¼¼¿ä' ¹®ÀÚ¿­ Ãâ·Â
-						updown_switch = Dice_Go(&j, updown_switch); //°ÔÀÌÁö°¡ À§¾Æ·¡·Î ¿Ô´Ù°¬´Ù ÇÕ´Ï´Ù.
+						Dice_space_helper(1); //'ìŠ¤íŽ˜ì´ìŠ¤ë°”ë¥¼ ëˆ„ë¥´ì„¸ìš”' ë¬¸ìžì—´ ì¶œë ¥
+						updown_switch = Dice_Go(&j, updown_switch); //ê²Œì´ì§€ê°€ ìœ„ì•„ëž˜ë¡œ ì™”ë‹¤ê°”ë‹¤ í•©ë‹ˆë‹¤.
 						while (_kbhit()) {
-							d = _getch(); //°ÔÀÌÁö°¡ ¿òÁ÷ÀÌ´Â µµÁß ½ºÆäÀÌ½º ¹Ù ÀÔ·ÂÀ» ¹Þ½À´Ï´Ù.
-							if (d == 32) { n_n = 0; } //½ºÆäÀÌ½º ¹Ù¸¦ ´©¸¦½Ã, °ÔÀÌÁö°¡ ¸ØÃã°ú µ¿½Ã¿¡ ´ÙÀÌ½º °ª Àü¿ªº¯¼ö¿¡ ·£´ýÀ¸·Î °ªÀÌ µé¾î°©´Ï´Ù.
-							// ---------------¹ßÇ¥¿ë ÁÖ»çÀ§ Á¶ÀÛ ÄÚµå ÀÔ´Ï´Ù -------------//
+							d = _getch(); //ê²Œì´ì§€ê°€ ì›€ì§ì´ëŠ” ë„ì¤‘ ìŠ¤íŽ˜ì´ìŠ¤ ë°” ìž…ë ¥ì„ ë°›ìŠµë‹ˆë‹¤.
+							if (d == 32) { n_n = 0; } //ìŠ¤íŽ˜ì´ìŠ¤ ë°”ë¥¼ ëˆ„ë¥¼ì‹œ, ê²Œì´ì§€ê°€ ë©ˆì¶¤ê³¼ ë™ì‹œì— ë‹¤ì´ìŠ¤ ê°’ ì „ì—­ë³€ìˆ˜ì— ëžœë¤ìœ¼ë¡œ ê°’ì´ ë“¤ì–´ê°‘ë‹ˆë‹¤.
+							// ---------------ë°œí‘œìš© ì£¼ì‚¬ìœ„ ì¡°ìž‘ ì½”ë“œ ìž…ë‹ˆë‹¤ -------------//
 							
-							/* <= ÀÌ ÁÖ¼®À» ¾ø¾Ö½Ã°í, ÁÖ»çÀ§ °ÔÀÌÁö ÀÔ·Â Ã¢¿¡¼­ ½ºÆäÀÌ½º ´ë½Å¿¡ Å°º¸µå 1,2,3,4,5,6 À» ´©¸£½Ã¸é ÇØ´ç ¹øÈ£¸¸Å­
-								¸»ÀÌ ÀÌµ¿ÇÕ´Ï´Ù ^^ Æò°¡ÇÏ½Ç ¶§¿¡ À¯¿ëÇÏ°Ô ½áÁÖ¼¼¿ä ~ ¹ßÇ¥ÇÒ¶§µµ »ç¿ëÇÏ´Â ÄÚµåÀÔ´Ï´Ù.*/
+							/* ì—¬ê¸°ì„œë¶€í„° 6ì¤„ì€ ì¹˜íŠ¸ì½”ë“œìž…ë‹ˆë‹¤. <= ì´ ì£¼ì„ì„ ì—†ì• ì‹œê³ , ì£¼ì‚¬ìœ„ ê²Œì´ì§€ ìž…ë ¥ ì°½ì—ì„œ ìŠ¤íŽ˜ì´ìŠ¤ ëŒ€ì‹ ì— í‚¤ë³´ë“œ 1,2,3,4,5,6 ì„ ëˆ„ë¥´ì‹œë©´ í•´ë‹¹ ë²ˆí˜¸ë§Œí¼
+								ë§ì´ ì´ë™í•©ë‹ˆë‹¤. ë°œí‘œí• ë•Œë„ ì‚¬ìš©í•˜ëŠ” ì½”ë“œìž…ë‹ˆë‹¤.*/
 							if (d == 49) { n_n = 0; PresentDice_Num = 1; }
 							if (d == 50) { n_n = 0; PresentDice_Num = 2; }
 							if (d == 51) { n_n = 0; PresentDice_Num = 3; }
@@ -143,51 +143,51 @@ int main()
 						}
 					}
 				}
-				Dice_space_helper(0); //½ºÆäÀÌ½º ¹Ù¸¦ ´©¸£¶ó°í µµ¿ÍÁÖ´Â ¹®ÀÚ¿­ Ãâ·ÂÇÏ´Â ÇÔ¼ö
-				Dice_Bar_clear(); //´ÙÀÌ½º °ÔÀÌÁö ºñ¿öÁÖ´ÂÇÔ¼ö
+				Dice_space_helper(0); //ìŠ¤íŽ˜ì´ìŠ¤ ë°”ë¥¼ ëˆ„ë¥´ë¼ê³  ë„ì™€ì£¼ëŠ” ë¬¸ìžì—´ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
+				Dice_Bar_clear(); //ë‹¤ì´ìŠ¤ ê²Œì´ì§€ ë¹„ì›Œì£¼ëŠ”í•¨ìˆ˜
 				PlaySound(TEXT("Dice.wav"), 0, SND_FILENAME | SND_ASYNC);
-				Assistant_Text_clear(); // Assistant ºÎºÐÀÇ ¹®ÀÚ¿­ ºñ¿öÁÖ´Â ÇÔ¼ö
+				Assistant_Text_clear(); // Assistant ë¶€ë¶„ì˜ ë¬¸ìžì—´ ë¹„ì›Œì£¼ëŠ” í•¨ìˆ˜
 				Sleep(500);
-				Display_Dice(PresentDice_Num); //´ÙÀÌ½º ±×·¡ÇÈ Ãâ·Â
+				Display_Dice(PresentDice_Num); //ë‹¤ì´ìŠ¤ ê·¸ëž˜í”½ ì¶œë ¥
 				Sleep(1000);
-				How_Much_Go(PresentDice_Num); // ~Ä­ ÀÌµ¿Çß½À´Ï´Ù ¹®ÀÚ¿­ Ãâ·Â ÇÔ¼ö
-				Go_To_MapPoint(turnplayer, PresentDice_Num); //ÇØ´ç ÁÖ»çÀ§ ¼ýÀÚ¸¸Å­ ¸ÊÀ» ÀÌµ¿
-				Dice_0_print(); //´ÙÀÌ½º°¡ 0ÀÏ¶§ÀÇ ±×·¡ÇÈ Ãâ·Â
-				Assistant_Text_clear(); //Assistant Ã¢ÀÇ ¸ðµç ³»¿ëÀ» Áö¿ó´Ï´Ù.
-				//printf("%d", Present_P1_MapPoint); // *°³¹ßÀ» À§ÇÑ ÀÓ½Ã ±¸¹®*
-				if (turnplayer == 1) print_What_Should_I_Do(Present_P1_MapPoint%20, turnplayer); //Ã¹¹øÂ° ÇÃ·¹ÀÌ¾î ¸» ÀÌµ¿ ÈÄ ½ºÅä¸® Ãâ·Â
+				How_Much_Go(PresentDice_Num); // ~ì¹¸ ì´ë™í–ˆìŠµë‹ˆë‹¤ ë¬¸ìžì—´ ì¶œë ¥ í•¨ìˆ˜
+				Go_To_MapPoint(turnplayer, PresentDice_Num); //í•´ë‹¹ ì£¼ì‚¬ìœ„ ìˆ«ìžë§Œí¼ ë§µì„ ì´ë™
+				Dice_0_print(); //ë‹¤ì´ìŠ¤ê°€ 0ì¼ë•Œì˜ ê·¸ëž˜í”½ ì¶œë ¥
+				Assistant_Text_clear(); //Assistant ì°½ì˜ ëª¨ë“  ë‚´ìš©ì„ ì§€ì›ë‹ˆë‹¤.
+				//printf("%d", Present_P1_MapPoint); // *ê°œë°œì„ ìœ„í•œ ìž„ì‹œ êµ¬ë¬¸*
+				if (turnplayer == 1) print_What_Should_I_Do(Present_P1_MapPoint%20, turnplayer); //ì²«ë²ˆì§¸ í”Œë ˆì´ì–´ ë§ ì´ë™ í›„ ìŠ¤í† ë¦¬ ì¶œë ¥
 
 
-				//if (turnplayer == 1) print_What_Should_I_Do(5, turnplayer); // °³¹ßÀ» À§ÇÑ ÀÓ½Ã ±¸¹®
+				//if (turnplayer == 1) print_What_Should_I_Do(5, turnplayer); // ê°œë°œì„ ìœ„í•œ ìž„ì‹œ êµ¬ë¬¸
 				//else print_What_Should_I_Do(3, turnplayer);
 
-				else print_What_Should_I_Do(Present_P2_MapPoint % 20, turnplayer); //µÎ¹øÂ° ÇÃ·¹ÀÌ¾î ¸» ÀÌµ¿ÈÄ ½ºÅä¸® Ãâ·Â
-				CL_board_error(); //º¸µå Ãâ·ÂÀÇ ¿À·ù¸¦ °íÃÄÁÖ´Â ÇÔ¼ö
-				Dice_0_print(); //´ÙÀÌ½º°¡ 0ÀÏ¶§ÀÇ ±×·¡ÇÈ Ãâ·Â ÇÔ¼ö
-				Assistant_boarder_print(); //¾î½Ã½ºÅÏÆ®ÀÇ Ã¢ Ãâ·Â ÇÔ¼ö(¹Ì´Ï°ÔÀÓ ½Ã¿¡ ¿À·ù°¡ ÀÖ´Â ¾î½Ã½ºÅÏÆ® Ã¢À» ¹Ù·ÎÀâ¾Æ ÁÝ´Ï´Ù)
-				Print_Life(); // ¶óÀÌÇÁ Æ÷ÀÎÆ® Ãâ·Â(°í1,°í2,°í3)
-				if (P1_Life > 4 || P2_Life > 4) // µÎ ÇÃ·¹ÀÌ¾îÀÇ ¶óÀÌÇÁ Æ÷ÀÎÆ® µÑÁß ÇÏ³ª¶óµµ Àç¼ö 1³âÀÌ ³ÑÀ¸¸é º´¿ªÀÇ ÀÇ¹«·Î °ÔÀÓÀÌ Á¾·áµË´Ï´Ù
+				else print_What_Should_I_Do(Present_P2_MapPoint % 20, turnplayer); //ë‘ë²ˆì§¸ í”Œë ˆì´ì–´ ë§ ì´ë™í›„ ìŠ¤í† ë¦¬ ì¶œë ¥
+				CL_board_error(); //ë³´ë“œ ì¶œë ¥ì˜ ì˜¤ë¥˜ë¥¼ ê³ ì³ì£¼ëŠ” í•¨ìˆ˜
+				Dice_0_print(); //ë‹¤ì´ìŠ¤ê°€ 0ì¼ë•Œì˜ ê·¸ëž˜í”½ ì¶œë ¥ í•¨ìˆ˜
+				Assistant_boarder_print(); //ì–´ì‹œìŠ¤í„´íŠ¸ì˜ ì°½ ì¶œë ¥ í•¨ìˆ˜(ë¯¸ë‹ˆê²Œìž„ ì‹œì— ì˜¤ë¥˜ê°€ ìžˆëŠ” ì–´ì‹œìŠ¤í„´íŠ¸ ì°½ì„ ë°”ë¡œìž¡ì•„ ì¤ë‹ˆë‹¤)
+				Print_Life(); // ë¼ì´í”„ í¬ì¸íŠ¸ ì¶œë ¥(ê³ 1,ê³ 2,ê³ 3)
+				if (P1_Life > 4 || P2_Life > 4) // ë‘ í”Œë ˆì´ì–´ì˜ ë¼ì´í”„ í¬ì¸íŠ¸ ë‘˜ì¤‘ í•˜ë‚˜ë¼ë„ ìž¬ìˆ˜ 1ë…„ì´ ë„˜ìœ¼ë©´ ë³‘ì—­ì˜ ì˜ë¬´ë¡œ ê²Œìž„ì´ ì¢…ë£Œë©ë‹ˆë‹¤
 				{
-					Game_over = 2; //2 = º´¿ªÀÇ ÀÇ¹« , Game_over_print ÇÔ¼ö¿¡ °ÔÀÓ ¿À¹öÀÇ ¿øÀÎÀ» ³Ñ°ÜÁÝ´Ï´Ù.
+					Game_over = 2; //2 = ë³‘ì—­ì˜ ì˜ë¬´ , Game_over_print í•¨ìˆ˜ì— ê²Œìž„ ì˜¤ë²„ì˜ ì›ì¸ì„ ë„˜ê²¨ì¤ë‹ˆë‹¤.
 				}
-				if (Game_over != 0) break; //°ÔÀÓ ¿À¹ö º¯¼ö°¡ 0ÀÌ ¾Æ´Ï¸é ´õÀÌ»ó ÅÏÀÌ ÁøÇàµÇÁö ¾Ê½À´Ï´Ù.
-				if (turnplayer == 1)  turnplayer = 2; //´ÙÀ½ ÅÏ¿¡ ´Ù¸¥ ÇÃ·¹ÀÌ¾î·Î ÅÏÀ» ³Ñ°ÜÁÝ´Ï´Ù. (turnplayer = 1 ¶Ç´Â 2)
+				if (Game_over != 0) break; //ê²Œìž„ ì˜¤ë²„ ë³€ìˆ˜ê°€ 0ì´ ì•„ë‹ˆë©´ ë”ì´ìƒ í„´ì´ ì§„í–‰ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
+				if (turnplayer == 1)  turnplayer = 2; //ë‹¤ìŒ í„´ì— ë‹¤ë¥¸ í”Œë ˆì´ì–´ë¡œ í„´ì„ ë„˜ê²¨ì¤ë‹ˆë‹¤. (turnplayer = 1 ë˜ëŠ” 2)
 				else turnplayer = 1;
-				closeness_recall(); //¸ðµç Ä£¹Ðµµ °ªÀ» °»½ÅÇØÁÝ´Ï´Ù.
+				closeness_recall(); //ëª¨ë“  ì¹œë°€ë„ ê°’ì„ ê°±ì‹ í•´ì¤ë‹ˆë‹¤.
 			}
 			Game_over_print(Game_over, turnplayer);
 			Game_over = 0;
 			if (RE_GAME()) {
-				Present_P1_MapPoint = 0; // ÇÃ·¹ÀÌ¾î 1ÀÇ ÇöÀç ¸Ê À§Ä¡
-				Present_P2_MapPoint = 0; // ÇÃ·¹ÀÌ¾î 2ÀÇ ÇöÀç ¸Ê À§Ä¡
-				C3_event = 0; //Çã°ü¹« ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
+				Present_P1_MapPoint = 0; // í”Œë ˆì´ì–´ 1ì˜ í˜„ìž¬ ë§µ ìœ„ì¹˜
+				Present_P2_MapPoint = 0; // í”Œë ˆì´ì–´ 2ì˜ í˜„ìž¬ ë§µ ìœ„ì¹˜
+				C3_event = 0; //í—ˆê´€ë¬´ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
 				C1_event = 0;
-				C6_event = 0; //±è»ó¿í ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-				C13_event = 0; // ³²½Â¿Ï ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
-				C14_event = 0; // ±èÀç¿µ ¼±»ý´Ô °ü·Ã ÀÌº¥Æ® º¯¼ö
+				C6_event = 0; //ê¹€ìƒìš± ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+				C13_event = 0; // ë‚¨ìŠ¹ì™„ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
+				C14_event = 0; // ê¹€ìž¬ì˜ ì„ ìƒë‹˜ ê´€ë ¨ ì´ë²¤íŠ¸ ë³€ìˆ˜
 				Game_over = 0;
 				Game_turn = 0;
-				for (int k = 0; k < 20; k++) { //¸ðµç Ä£¹Ðµµ °ªÀ» ÃÊ±âÈ­ ÇØÁÝ´Ï´Ù.
+				for (int k = 0; k < 20; k++) { //ëª¨ë“  ì¹œë°€ë„ ê°’ì„ ì´ˆê¸°í™” í•´ì¤ë‹ˆë‹¤.
 					if (k == 0 || k == 10)
 						closeness[k] = 0;
 					else
@@ -200,5 +200,5 @@ int main()
 			else
 				break;
 		}
-		// °ÔÀÓ ³¡.
+		// ê²Œìž„ ë.
 }
